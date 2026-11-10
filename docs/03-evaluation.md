@@ -49,34 +49,66 @@ python main.py run-all           # 真实模型 → examples/results/real_summar
 
 ## 实际结果：真实模型
 
-> 【待你运行后填写】运行 `python main.py run-all` 后，把下表补全，并据实写下观察。不要照抄预期。
-
-- 模型：`deepseek-chat`（运行日期：____）
-- 结果汇总：[examples/results/real_summary.md](../examples/results/real_summary.md)
+- 模型：`deepseek-chat`（DeepSeek 官方接口，temperature=0），运行日期 2026-11-10，每个用例运行 1 次
+- 结果汇总：[examples/results/real_summary.md](../examples/results/real_summary.md)，**12/12 通过，Guard 更正 0 次**
 - 逐步 Trace：`examples/runs/real/<用例>/trace.md`
 
-| 用例 | 结果 | 工具调用次数 | Guard 更正 | 观察（模型实际怎么做的） |
-|---|---|---|---|---|
-| case01 | | | | |
-| case02 | | | | 例：先 query_slots 发现 18:00 被 M90 占用，选 19:00 并标待确认 |
-| case03 | | | | |
-| case04 | | | | |
-| case05 | | | | |
-| case06 | | | | |
-| case07 | | | | |
-| case08 | | | | |
-| case09 | | | | |
-| case10 | | | | |
-| case11 | | | | |
-| case12 | | | | |
+Guard 更正为 0，说明模型在每个用例中提交的审核结论、草稿保存状态都与工具真实记录一致，没有出现“虚报保存成功”或“已发布”表述，不需要对账层兜底。
 
-**两条执行路径对照**（题目要求体现模型根据不同工具结果调整动作）。建议在真实 Trace 中引用以下几组：
+| 用例 | 结果 | 工具调用 | 观察（模型实际怎么做的） |
+|---|---|---|---|
+| [case01](../examples/runs/real/case01_normal/trace.md) | ✅ | 4 | 读取 → 审核 pass → 查时段确认 20:00 空闲 → 按原时间保存（created，无需确认） |
+| [case02](../examples/runs/real/case02_slot_conflict/trace.md) | ✅ | 4 | 查时段发现 18:00 被 M90 占用，自行选择同日最接近的空闲时段 19:00，保存时 `needs_confirmation=true` 并写明“原定 18:00 已被占用，建议改为 19:00，需用户确认”；总结写明“仅草稿未发布” |
+| [case03](../examples/runs/real/case03_missing_info/trace.md) | ✅ | 3 | 审核 needs_info 后未保存草稿，列出缺失的 duration_sec、cover_url。另外多查了一次时段，作为补齐后排期的参考（非必要，但无害） |
+| [case04](../examples/runs/real/case04_rule_risk_block/trace.md) | ✅ | 7 | M04 返回 needs_verification → 调 lookup_license 得到 expired → 再次 check_rules 得到 block；M06 直接 block。两者都未保存。模型在拿到补查结果前，同一轮里提前查了一次 M04 的时段，属于多余调用 |
+| [case05](../examples/runs/real/case05_risk_verified_pass/trace.md) | ✅ | 6 | M05 同样 needs_verification → 补查得到 valid → 重新审核 pass → 查时段 → 按 19:00 保存 |
+| [case06](../examples/runs/real/case06_duplicate_submit/) | ✅ | 8 | 第二次运行时 query_slots 显示 `19:00(held_by_own_draft:M01)`，模型据此仍选 19:00 保存，返回 `deduplicated`，存储中仍只有 1 份草稿（v1） |
+| [case07](../examples/runs/real/case07_resubmit_after_slot_change/) | ✅ | 8 | 第二次运行时 19:00 已被 M92 占用，模型改选 20:00，同一份草稿 `updated` 为 v2，19:00 不再保留 |
+| [case08](../examples/runs/real/case08_save_failure/trace.md) | ✅ | 5 | 保存返回 STORAGE_UNAVAILABLE（可重试）→ 按提示只重试 1 次 → 仍失败后如实报告“草稿未能保存”，task_status=partial_failed |
+| [case09](../examples/runs/real/case09_tool_transient_failure/trace.md) | ✅ | 5 | 时段查询首次超时 → 模型重试 → 成功后正常保存，completed |
+| [case10](../examples/runs/real/case10_fixed_time_conflict/trace.md) | ✅ | 3 | 18:00 被占用且为 fixed，模型没有调用 save_draft，在结果中给出建议 19:00 并请求用户确认。**意外情况**：第一次 submit_report 的参数 JSON 格式错误，循环把解析错误作为观察返回，模型下一轮重新提交成功 |
+| [case11](../examples/runs/real/case11_step_limit/trace.md) | ✅ | 6 | 模型每轮并行处理两个素材，第 3 轮查完时段后达到 3 轮上限，返回 incomplete 及原因“模型调用轮数达到上限 3” |
+| [case12](../examples/runs/real/case12_batch/trace.md) | ✅ | 14 | 先为原时段空闲的 M05(19:00)、M02(20:00) 保存，再给 M01 找替代：18/19/20/21 点都已不可用，选 12:00 并在确认事项中解释“19:00、20:00 已分配给 M05、M02，故未选更接近的时段”；M06 阻断。3 份草稿互不冲突 |
 
-1. case04 与 case05：同为“授权未知”，补查返回 expired → 阻断；返回 valid → 继续排期。
-2. case02 与 case10：同为 18:00 被占用，flexible → 改时段并保存待确认；fixed → 不保存、请求确认。
-3. case06 与 case07 的第二次运行：时段未变 → deduplicated；时段被占 → 改选并 updated。
+### 两条执行路径对照
 
-**失败用例分析**：【如有失败，写清楚失败的是哪条核对、Trace 里模型做了什么、原因判断（提示词？工具描述？预期过严？）以及你改了什么、改后结果。】
+题目要求体现“模型根据不同工具结果调整动作”。以下三组对照中，用例输入结构相同，差异只来自工具返回：
+
+**1. 补查结果不同 → 阻断 vs 继续排期**
+
+| 步骤 | case04 · M04 | case05 · M05 |
+|---|---|---|
+| check_rules | needs_verification（R03 授权未知） | needs_verification（R03 授权未知） |
+| lookup_license | **expired** | **valid** |
+| 再次 check_rules | block | pass |
+| 后续动作 | 不查时段、不保存，报告阻断原因 | query_slots → save_draft 19:00 |
+
+**2. 时间要求的灵活度不同 → 改时段保存 vs 不保存、请求确认**
+
+| 步骤 | case02 · M01（flexible） | case10 · M02（fixed） |
+|---|---|---|
+| query_slots | 18:00 被 M90 占用 | 18:00 被 M90 占用 |
+| 后续动作 | save_draft 19:00，needs_confirmation=true | **不调用 save_draft**，直接 submit_report 请求确认 |
+| 最终状态 | draft_saved_pending_confirmation | awaiting_confirmation |
+
+**3. 重复提交时占用情况不同 → 去重 vs 更新同一份草稿**
+
+| 步骤 | case06 第 2 次运行 | case07 第 2 次运行 |
+|---|---|---|
+| query_slots | 19:00 = held_by_own_draft（自己的草稿） | 19:00 = occupied（被 M92 占用） |
+| save_draft | 19:00 → **deduplicated** | 20:00 → **updated（v2）** |
+| 存储中 M01 草稿数 | 1 | 1 |
+
+另外，case08 与 case09 对比了工具失败后的两种结局：持续失败时重试 1 次后如实报告失败；临时失败时重试后继续完成任务。
+
+### 失败与异常分析
+
+12 个用例的自动核对全部通过，没有失败用例。但逐条阅读 Trace 发现以下不完美之处，记录如下：
+
+1. **参数格式错误（case10）**：模型第一次调用 submit_report 时生成的 JSON 不合法。循环没有崩溃，而是把错误信息作为工具结果返回，模型下一轮自行修正。这说明“参数解析失败也当作观察返回”的设计是必要的；但它也多消耗了一轮，如果步数上限设得很紧，可能因此变成 incomplete。
+2. **多余调用（case03、case04）**：模型在已经不需要排期时仍查询了时段。没有造成错误结果，但浪费调用次数。可以在提示词中说明“审核未通过时无需查询时段”，或者接受这种为用户提供参考信息的行为。
+3. **调用顺序上的“抢跑”（case04）**：模型在同一轮里并行发起 lookup_license 和 query_slots，即在拿到补查结果前就开始查时段。最终结论仍正确，因为保存草稿前工具层会重新审核。
+4. **只运行了一次**：上述结论来自单次运行，不能证明每次运行都稳定通过，见“已知限制”第 1 条。
 
 ## 已知限制
 
