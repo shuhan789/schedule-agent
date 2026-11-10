@@ -1,0 +1,87 @@
+{
+  "name": "case03_missing_info",
+  "title": "素材信息缺失：M03缺封面与时长",
+  "covers": [
+    "素材信息缺失",
+    "资料不足"
+  ],
+  "request": {
+    "request_id": "REQ-003",
+    "items": [
+      {
+        "material_id": "M03",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "12:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M03",
+          "reason": "读取M03元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M03",
+          "channel": "feed",
+          "reason": "字段缺失，确认审核结论"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M03",
+              "review_status": "needs_info",
+              "draft_saved": false,
+              "requested_time": "12:00",
+              "suggested_time": "",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [
+                "缺少 duration_sec、cover_url"
+              ],
+              "next_step": "请运营补充时长和封面后重新提交"
+            }
+          ],
+          "summary": "M03信息缺失，未保存草稿。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "needs_user_action"
+    ],
+    "items": {
+      "M03": {
+        "final_state_in": [
+          "needs_info"
+        ],
+        "draft_saved": false,
+        "risk_mentions": [
+          "duration_sec",
+          "cover_url"
+        ]
+      }
+    },
+    "store": {
+      "M03": {
+        "count": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "_note": "合成素材数据，非真实业务数据。字段为 null 表示缺失。",
+  "materials": [
+    {
+      "material_id": "M01",
+      "title": "小影AI一键成片教程",
+      "type": "video",
+      "duration_sec": 45,
+      "cover_url": "https://example.com/covers/m01.jpg",
+      "owner": "运营-小林",
+      "description": "三步演示如何用AI一键成片功能生成旅行vlog。",
+      "bgm_track": "TRK-101",
+      "bgm_license": "owned"
+    },
+    {
+      "material_id": "M02",
+      "title": "冬日vlog模板上新",
+      "type": "video",
+      "duration_sec": 30,
+      "cover_url": "https://example.com/covers/m02.jpg",
+      "owner": "运营-阿青",
+      "description": "本周上新的5款冬日氛围vlog模板合集。",
+      "bgm_track": "TRK-102",
+      "bgm_license": "licensed"
+    },
+    {
+      "material_id": "M03",
+      "title": "新年倒计时模板",
+      "type": "video",
+      "duration_sec": null,
+      "cover_url": null,
+      "owner": "运营-小林",
+      "description": "跨年倒计时卡点模板预告。",
+      "bgm_track": "TRK-103",
+      "bgm_license": "owned"
+    },
+    {
+      "material_id": "M04",
+      "title": "复古胶片滤镜合集",
+      "type": "video",
+      "duration_sec": 60,
+      "cover_url": "https://example.com/covers/m04.jpg",
+      "owner": "运营-阿青",
+      "description": "8款复古胶片滤镜效果对比。",
+      "bgm_track": "TRK-204",
+      "bgm_license": "unknown"
+    },
+    {
+      "material_id": "M05",
+      "title": "毕业季剪辑技巧",
+      "type": "video",
+      "duration_sec": 90,
+      "cover_url": "https://example.com/covers/m05.jpg",
+      "owner": "运营-小周",
+      "description": "毕业季回忆视频的转场与字幕技巧。",
+      "bgm_track": "TRK-305",
+      "bgm_license": "unknown"
+    },
+    {
+      "material_id": "M06",
+      "title": "全网第一的卡点模板",
+      "type": "video",
+      "duration_sec": 20,
+      "cover_url": "https://example.com/covers/m06.jpg",
+      "owner": "运营-小周",
+      "description": "节奏卡点模板，一键套用。",
+      "bgm_track": "TRK-106",
+      "bgm_license": "owned"
+    }
+  ]
+}

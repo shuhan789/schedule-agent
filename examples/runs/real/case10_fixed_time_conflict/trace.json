@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "case": "case10_fixed_time_conflict",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-010",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M02"
+      },
+      "reason": "读取 M02 元数据以确认字段完整性和基本信息",
+      "ok": true,
+      "summary": "《冬日vlog模板上新》 bgm=licensed，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed"
+      },
+      "reason": "按 feed 渠道规则审核 M02",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M02"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，确认 18:00 是否可用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "submit_report",
+      "args": {
+        "raw": "{\"items\": [{\"material_id\": \"M02\", \"review_status\": \"approved\", \"draft_saved\": false, \"requested_time\": \"18:00\", \"suggested_time\": \"19:00\", \"needs_confirmation\": true, \"pending_confirmations\": [\"原定 202"
+      },
+      "reason": "",
+      "ok": false,
+      "summary": "参数不是合法 JSON: Expecting ':' delimiter: line 1 column 381 (char 380)"
+    },
+    {
+      "turn": 4,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "M02 审核通过但固定时段被占用，需用户确认替代时段，故不保存草稿并提交结果",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-010",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "18:00",
+        "time_flexibility": "fixed",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "19:00",
+        "needs_confirmation": true,
+        "pending_confirmations": [
+          "原定 2026-11-12 18:00（feed）已被素材 M90 占用；因该素材时间要求为 fixed，未擅自改期，请确认是否改用同日空闲时段 19:00（备选 20:00 / 12:00 / 10:00）"
+        ],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "awaiting_confirmation",
+        "next_step": "请用户确认替代时段（建议 19:00）后，我再保存排期草稿"
+      }
+    ],
+    "summary": "M02 审核通过（feed 渠道，无规则命中，BGM 已授权）。但用户要求的 2026-11-12 18:00 已被 M90 占用，且该素材为 fixed 时间要求，故未保存草稿；同日空闲时段为 10:00、12:00、19:00、20:00，建议 19:00，等待用户确认。",
+    "guard_notes": []
+  }
+}

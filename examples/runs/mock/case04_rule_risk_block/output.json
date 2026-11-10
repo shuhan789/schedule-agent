@@ -1,0 +1,50 @@
+{
+  "request_id": "REQ-004",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M04",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "19:00",
+      "time_flexibility": "flexible",
+      "review_status": "blocked",
+      "risk_reasons": [
+        "背景音乐 TRK-204 补查结果为 expired，无有效授权"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "blocked",
+      "next_step": ""
+    },
+    {
+      "material_id": "M06",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "20:00",
+      "time_flexibility": "flexible",
+      "review_status": "blocked",
+      "risk_reasons": [
+        "标题/描述含广告法极限词: 全网第一，需修改文案"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "blocked",
+      "next_step": ""
+    }
+  ],
+  "summary": "M04、M06均被阻断，未保存草稿。",
+  "guard_notes": []
+}

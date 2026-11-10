@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "case": "case07_resubmit_after_slot_change",
+    "mode": "mock",
+    "model": "ScriptedLLM (离线 Mock，回放预设动作)",
+    "request_id": "REQ-002",
+    "run_index": 2,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "读取M01元数据",
+      "ok": true,
+      "summary": "《小影AI一键成片教程》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed"
+      },
+      "reason": "审核M01",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 3,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M01"
+      },
+      "reason": "重新查询占用，原草稿时段可能已变化",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '20:00']；占用: ['18:00(occupied:M90)', '19:00(occupied:M92)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 4,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "20:00",
+        "needs_confirmation": true,
+        "confirmation_items": [
+          "原定18:00已被M90占用，19:00也已被M92占用，建议改为20:00，需用户确认"
+        ],
+        "note": ""
+      },
+      "reason": "19:00已被M92占用，改选20:00",
+      "ok": true,
+      "summary": "updated DRAFT-CF6562FB 20:00 status=pending_confirmation v2"
+    },
+    {
+      "turn": 5,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "全部素材已有结论",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-002",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "18:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "20:00",
+        "needs_confirmation": true,
+        "pending_confirmations": [
+          "原定18:00已被M90占用，19:00也已被M92占用，建议改为20:00，需用户确认"
+        ],
+        "draft": {
+          "saved": true,
+          "action": "updated",
+          "draft_id": "DRAFT-CF6562FB",
+          "time": "20:00",
+          "status": "pending_confirmation",
+          "version": 2
+        },
+        "final_state": "draft_saved_pending_confirmation",
+        "next_step": ""
+      }
+    ],
+    "summary": "M01草稿由19:00更新为20:00，待确认（未发布）。",
+    "guard_notes": []
+  }
+}

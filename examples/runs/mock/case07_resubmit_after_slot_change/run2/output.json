@@ -1,0 +1,34 @@
+{
+  "request_id": "REQ-002",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M01",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "18:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "20:00",
+      "needs_confirmation": true,
+      "pending_confirmations": [
+        "原定18:00已被M90占用，19:00也已被M92占用，建议改为20:00，需用户确认"
+      ],
+      "draft": {
+        "saved": true,
+        "action": "updated",
+        "draft_id": "DRAFT-CF6562FB",
+        "time": "20:00",
+        "status": "pending_confirmation",
+        "version": 2
+      },
+      "final_state": "draft_saved_pending_confirmation",
+      "next_step": ""
+    }
+  ],
+  "summary": "M01草稿由19:00更新为20:00，待确认（未发布）。",
+  "guard_notes": []
+}

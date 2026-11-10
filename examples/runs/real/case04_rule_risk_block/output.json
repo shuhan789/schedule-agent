@@ -1,0 +1,50 @@
+{
+  "request_id": "REQ-004",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M04",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "19:00",
+      "time_flexibility": "flexible",
+      "review_status": "blocked",
+      "risk_reasons": [
+        "背景音乐 TRK-204 补查结果为 expired，无有效授权"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "blocked",
+      "next_step": "请更换为已授权背景音乐或续期 TRK-204 授权后重新提交审核；审核通过后再排期（2026-11-12 feed 渠道 19:00 当前空闲）"
+    },
+    {
+      "material_id": "M06",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "20:00",
+      "time_flexibility": "flexible",
+      "review_status": "blocked",
+      "risk_reasons": [
+        "标题/描述含广告法极限词: 全网第一，需修改文案"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "blocked",
+      "next_step": "请修改标题（去掉“全网第一”等极限词）后重新提交审核；审核通过后再排期（2026-11-12 feed 渠道 20:00 当前空闲）"
+    }
+  ],
+  "summary": "REQ-004 两个素材均未通过审核，未保存任何排期草稿。M04 因背景音乐 TRK-204 授权已过期被阻断；M06 因标题含极限词“全网第一”被阻断。两者均需修改后重新提交审核。2026-11-12 feed 渠道 19:00 与 20:00 目前空闲，可在素材整改通过后使用。",
+  "guard_notes": []
+}

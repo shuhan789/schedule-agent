@@ -1,0 +1,30 @@
+{
+  "request_id": "REQ-003",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M03",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "12:00",
+      "time_flexibility": "flexible",
+      "review_status": "needs_info",
+      "risk_reasons": [
+        "缺少必填字段: duration_sec, cover_url，需运营补充"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "needs_info",
+      "next_step": "请运营补充时长和封面后重新提交"
+    }
+  ],
+  "summary": "M03信息缺失，未保存草稿。",
+  "guard_notes": []
+}

@@ -1,0 +1,7 @@
+{
+  "request_id": "REQ-DEMO",
+  "items": [
+    {"material_id": "M01", "channel": "feed", "date": "2026-11-12", "preferred_time": "18:00", "time_flexibility": "flexible"},
+    {"material_id": "M04", "channel": "feed", "date": "2026-11-12", "preferred_time": "19:00", "time_flexibility": "flexible"}
+  ]
+}

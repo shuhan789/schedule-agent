@@ -1,0 +1,32 @@
+{
+  "request_id": "REQ-009",
+  "task_status": "completed",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M02",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "20:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "20:00",
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": true,
+        "action": "created",
+        "draft_id": "DRAFT-FB7A1E15",
+        "time": "20:00",
+        "status": "ready",
+        "version": 1
+      },
+      "final_state": "draft_saved",
+      "next_step": "草稿已保存（未发布），等待运营在发布前做最终确认与发布操作"
+    }
+  ],
+  "summary": "M02（冬日vlog模板上新）审核通过，无风险项；2026-11-12 feed 渠道 20:00 时段空闲，已按用户要求时间保存排期草稿 DRAFT-FB7A1E15（仅草稿，未发布）。",
+  "guard_notes": []
+}

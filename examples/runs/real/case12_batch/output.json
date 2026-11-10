@@ -1,0 +1,99 @@
+{
+  "request_id": "REQ-012",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M01",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "18:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "12:00",
+      "needs_confirmation": true,
+      "pending_confirmations": [
+        "原定 18:00 已被占用（M90），建议改为 12:00，需用户确认",
+        "19:00 已分配给 M05、20:00 已分配给 M02，故未选更接近的时段"
+      ],
+      "draft": {
+        "saved": true,
+        "action": "created",
+        "draft_id": "DRAFT-CF6562FB",
+        "time": "12:00",
+        "status": "pending_confirmation",
+        "version": 1
+      },
+      "final_state": "draft_saved_pending_confirmation",
+      "next_step": "请用户确认是否接受 12:00 发布；确认后草稿可转正式排期"
+    },
+    {
+      "material_id": "M05",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "19:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "19:00",
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": true,
+        "action": "created",
+        "draft_id": "DRAFT-FB4F42DE",
+        "time": "19:00",
+        "status": "ready",
+        "version": 1
+      },
+      "final_state": "draft_saved",
+      "next_step": "无需操作，草稿已就绪（未发布）"
+    },
+    {
+      "material_id": "M02",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "20:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "20:00",
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": true,
+        "action": "created",
+        "draft_id": "DRAFT-FB7A1E15",
+        "time": "20:00",
+        "status": "ready",
+        "version": 1
+      },
+      "final_state": "draft_saved",
+      "next_step": "无需操作，草稿已就绪（未发布）"
+    },
+    {
+      "material_id": "M06",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "12:00",
+      "time_flexibility": "flexible",
+      "review_status": "blocked",
+      "risk_reasons": [
+        "标题/描述含广告法极限词: 全网第一，需修改文案"
+      ],
+      "suggested_time": null,
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "blocked",
+      "next_step": "请运营修改标题/描述去除极限词后重新提交审核，本次不排期"
+    }
+  ],
+  "summary": "共处理 4 个素材：M05、M02 审核通过并按原要求时段（19:00、20:00）保存草稿；M01 审核通过但原定 18:00 已被 M90 占用，已按 flexible 规则改选同日最接近的空闲时段 12:00 保存草稿并标记需用户确认；M06 因标题含极限词“全网第一”被阻断，未保存草稿，需修改文案后重审。所有草稿均未发布。",
+  "guard_notes": []
+}

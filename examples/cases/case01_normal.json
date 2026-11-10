@@ -1,0 +1,111 @@
+{
+  "name": "case01_normal",
+  "title": "正常排期：无风险、要求时段空闲",
+  "covers": [
+    "正常排期"
+  ],
+  "request": {
+    "request_id": "REQ-001",
+    "items": [
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "20:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M02",
+          "reason": "读取M02元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "reason": "审核M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用",
+          "material_id": "M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "20:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "20:00空闲且与要求一致"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M02",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "20:00",
+              "suggested_time": "20:00",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-FB7A1E15"
+            }
+          ],
+          "summary": "M02审核通过，已保存20:00排期草稿（未发布）。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "completed"
+    ],
+    "items": {
+      "M02": {
+        "final_state_in": [
+          "draft_saved"
+        ],
+        "time_in": [
+          "20:00"
+        ],
+        "needs_confirmation": false,
+        "draft_saved": true
+      }
+    },
+    "store": {
+      "M02": {
+        "count": 1
+      }
+    }
+  }
+}

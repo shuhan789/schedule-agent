@@ -1,0 +1,811 @@
+[
+  {
+    "case": "case01_normal",
+    "title": "正常排期：无风险、要求时段空闲",
+    "covers": [
+      "正常排期"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "completed",
+    "final_states": {
+      "M02": "draft_saved"
+    },
+    "guard_notes": 0,
+    "tool_calls": 4,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['completed']",
+        "passed": true,
+        "detail": "实际 completed（模型已提交结果）"
+      },
+      {
+        "name": "M02 最终状态 ∈ ['draft_saved']",
+        "passed": true,
+        "detail": "实际 draft_saved"
+      },
+      {
+        "name": "M02 建议时段 ∈ ['20:00']",
+        "passed": true,
+        "detail": "实际 20:00"
+      },
+      {
+        "name": "M02 待确认 = False",
+        "passed": true,
+        "detail": "实际 False；[]"
+      },
+      {
+        "name": "M02 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"created\", \"draft_id\": \"DRAFT-FB7A1E15\", \"time\": \"20:00\", \"status\": \"ready\", \"version\": 1}"
+      },
+      {
+        "name": "存储中 M02 草稿数 = 1",
+        "passed": true,
+        "detail": "实际 1：[('DRAFT-FB7A1E15', '20:00', 'v1')]"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case01_normal"
+  },
+  {
+    "case": "case02_slot_conflict",
+    "title": "参考实例：M01要求18:00但已占用，建议19:00并待确认",
+    "covers": [
+      "时段冲突",
+      "确认边界"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M01": "draft_saved_pending_confirmation"
+    },
+    "guard_notes": 0,
+    "tool_calls": 4,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['needs_user_action']",
+        "passed": true,
+        "detail": "实际 needs_user_action（模型已提交结果）"
+      },
+      {
+        "name": "M01 最终状态 ∈ ['draft_saved_pending_confirmation']",
+        "passed": true,
+        "detail": "实际 draft_saved_pending_confirmation"
+      },
+      {
+        "name": "M01 审核结论 = approved",
+        "passed": true,
+        "detail": "实际 approved；风险: []"
+      },
+      {
+        "name": "M01 建议时段 ∉ ['18:00', '21:00', None]",
+        "passed": true,
+        "detail": "实际 19:00"
+      },
+      {
+        "name": "M01 待确认 = True",
+        "passed": true,
+        "detail": "实际 True；['原定18:00已被M90占用，建议改为19:00，需用户确认']"
+      },
+      {
+        "name": "M01 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"created\", \"draft_id\": \"DRAFT-CF6562FB\", \"time\": \"19:00\", \"status\": \"pending_confirmation\", \"version\": 1}"
+      },
+      {
+        "name": "存储中 M01 草稿数 = 1",
+        "passed": true,
+        "detail": "实际 1：[('DRAFT-CF6562FB', '19:00', 'v1')]"
+      },
+      {
+        "name": "存储中 M01 时段 ∉ ['18:00']",
+        "passed": true,
+        "detail": "实际 ['19:00']"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case02_slot_conflict"
+  },
+  {
+    "case": "case03_missing_info",
+    "title": "素材信息缺失：M03缺封面与时长",
+    "covers": [
+      "素材信息缺失",
+      "资料不足"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M03": "needs_info"
+    },
+    "guard_notes": 0,
+    "tool_calls": 2,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['needs_user_action']",
+        "passed": true,
+        "detail": "实际 needs_user_action（模型已提交结果）"
+      },
+      {
+        "name": "M03 最终状态 ∈ ['needs_info']",
+        "passed": true,
+        "detail": "实际 needs_info"
+      },
+      {
+        "name": "M03 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "M03 风险原因提及 ['duration_sec', 'cover_url']",
+        "passed": true,
+        "detail": "缺少必填字段: duration_sec, cover_url，需运营补充"
+      },
+      {
+        "name": "存储中 M03 草稿数 = 0",
+        "passed": true,
+        "detail": "实际 0：[]"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case03_missing_info"
+  },
+  {
+    "case": "case04_rule_risk_block",
+    "title": "规则风险：M04补查后授权过期→阻断；M06含极限词→阻断",
+    "covers": [
+      "规则风险",
+      "补查",
+      "阻断"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M04": "blocked",
+      "M06": "blocked"
+    },
+    "guard_notes": 0,
+    "tool_calls": 6,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['needs_user_action']",
+        "passed": true,
+        "detail": "实际 needs_user_action（模型已提交结果）"
+      },
+      {
+        "name": "M04 最终状态 ∈ ['blocked']",
+        "passed": true,
+        "detail": "实际 blocked"
+      },
+      {
+        "name": "M04 审核结论 = blocked",
+        "passed": true,
+        "detail": "实际 blocked；风险: ['背景音乐 TRK-204 补查结果为 expired，无有效授权']"
+      },
+      {
+        "name": "M04 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "M04 风险原因提及 ['expired']",
+        "passed": true,
+        "detail": "背景音乐 TRK-204 补查结果为 expired，无有效授权"
+      },
+      {
+        "name": "M06 最终状态 ∈ ['blocked']",
+        "passed": true,
+        "detail": "实际 blocked"
+      },
+      {
+        "name": "M06 审核结论 = blocked",
+        "passed": true,
+        "detail": "实际 blocked；风险: ['标题/描述含广告法极限词: 全网第一，需修改文案']"
+      },
+      {
+        "name": "M06 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "M06 风险原因提及 ['全网第一']",
+        "passed": true,
+        "detail": "标题/描述含广告法极限词: 全网第一，需修改文案"
+      },
+      {
+        "name": "存储中 M04 草稿数 = 0",
+        "passed": true,
+        "detail": "实际 0：[]"
+      },
+      {
+        "name": "存储中 M06 草稿数 = 0",
+        "passed": true,
+        "detail": "实际 0：[]"
+      },
+      {
+        "name": "第1次运行调用 lookup_license {'material_id': 'M04'} ≥ 1 次",
+        "passed": true,
+        "detail": "实际 1 次"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case04_rule_risk_block"
+  },
+  {
+    "case": "case05_risk_verified_pass",
+    "title": "规则风险补查后通过：M05授权有效→正常排期",
+    "covers": [
+      "规则风险",
+      "补查",
+      "正常排期"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "completed",
+    "final_states": {
+      "M05": "draft_saved"
+    },
+    "guard_notes": 0,
+    "tool_calls": 6,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['completed']",
+        "passed": true,
+        "detail": "实际 completed（模型已提交结果）"
+      },
+      {
+        "name": "M05 最终状态 ∈ ['draft_saved']",
+        "passed": true,
+        "detail": "实际 draft_saved"
+      },
+      {
+        "name": "M05 建议时段 ∈ ['19:00']",
+        "passed": true,
+        "detail": "实际 19:00"
+      },
+      {
+        "name": "M05 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"created\", \"draft_id\": \"DRAFT-FB4F42DE\", \"time\": \"19:00\", \"status\": \"ready\", \"version\": 1}"
+      },
+      {
+        "name": "存储中 M05 草稿数 = 1",
+        "passed": true,
+        "detail": "实际 1：[('DRAFT-FB4F42DE', '19:00', 'v1')]"
+      },
+      {
+        "name": "第1次运行调用 lookup_license {'material_id': 'M05'} ≥ 1 次",
+        "passed": true,
+        "detail": "实际 1 次"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case05_risk_verified_pass"
+  },
+  {
+    "case": "case06_duplicate_submit",
+    "title": "重复提交：同一请求运行两次只产生一份草稿",
+    "covers": [
+      "重复提交",
+      "防重复"
+    ],
+    "mode": "mock",
+    "runs": 2,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M01": "draft_saved_pending_confirmation"
+    },
+    "guard_notes": 0,
+    "tool_calls": 8,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "M01 待确认 = True",
+        "passed": true,
+        "detail": "实际 True；['原定18:00已被M90占用，建议改为19:00，需用户确认']"
+      },
+      {
+        "name": "M01 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"deduplicated\", \"draft_id\": \"DRAFT-CF6562FB\", \"time\": \"19:00\", \"status\": \"pending_confirmation\", \"version\": 1}"
+      },
+      {
+        "name": "M01 草稿动作 ∈ ['deduplicated']",
+        "passed": true,
+        "detail": "实际 deduplicated"
+      },
+      {
+        "name": "存储中 M01 草稿数 = 1",
+        "passed": true,
+        "detail": "实际 1：[('DRAFT-CF6562FB', '19:00', 'v1')]"
+      },
+      {
+        "name": "存储中 M01 时段 ∉ ['18:00']",
+        "passed": true,
+        "detail": "实际 ['19:00']"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case06_duplicate_submit"
+  },
+  {
+    "case": "case07_resubmit_after_slot_change",
+    "title": "更换占用时段并重复提交：19:00被他人占用后重跑，原草稿改到新时段",
+    "covers": [
+      "时段冲突",
+      "重复提交",
+      "审核要点：更换占用时段"
+    ],
+    "mode": "mock",
+    "runs": 2,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M01": "draft_saved_pending_confirmation"
+    },
+    "guard_notes": 0,
+    "tool_calls": 8,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "M01 最终状态 ∈ ['draft_saved_pending_confirmation']",
+        "passed": true,
+        "detail": "实际 draft_saved_pending_confirmation"
+      },
+      {
+        "name": "M01 建议时段 ∉ ['18:00', '19:00', '21:00', None]",
+        "passed": true,
+        "detail": "实际 20:00"
+      },
+      {
+        "name": "M01 待确认 = True",
+        "passed": true,
+        "detail": "实际 True；['原定18:00已被M90占用，19:00也已被M92占用，建议改为20:00，需用户确认']"
+      },
+      {
+        "name": "M01 草稿动作 ∈ ['updated']",
+        "passed": true,
+        "detail": "实际 updated"
+      },
+      {
+        "name": "存储中 M01 草稿数 = 1",
+        "passed": true,
+        "detail": "实际 1：[('DRAFT-CF6562FB', '20:00', 'v2')]"
+      },
+      {
+        "name": "存储中 M01 时段 ∉ ['18:00', '19:00']",
+        "passed": true,
+        "detail": "实际 ['20:00']"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case07_resubmit_after_slot_change"
+  },
+  {
+    "case": "case08_save_failure",
+    "title": "保存失败：存储持续不可用，必须明确返回失败",
+    "covers": [
+      "保存失败",
+      "工具失败"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "partial_failed",
+    "final_states": {
+      "M02": "save_failed"
+    },
+    "guard_notes": 0,
+    "tool_calls": 5,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['partial_failed']",
+        "passed": true,
+        "detail": "实际 partial_failed（模型已提交结果）"
+      },
+      {
+        "name": "M02 最终状态 ∈ ['save_failed']",
+        "passed": true,
+        "detail": "实际 save_failed"
+      },
+      {
+        "name": "M02 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"failed\", \"error_code\": \"STORAGE_UNAVAILABLE\", \"error\": \"草稿存储服务不可用，本次未保存\"}"
+      },
+      {
+        "name": "存储中 M02 草稿数 = 0",
+        "passed": true,
+        "detail": "实际 0：[]"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case08_save_failure"
+  },
+  {
+    "case": "case09_tool_transient_failure",
+    "title": "工具失败后恢复：时段查询首次超时，重试成功",
+    "covers": [
+      "工具失败",
+      "正常排期"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "completed",
+    "final_states": {
+      "M02": "draft_saved"
+    },
+    "guard_notes": 0,
+    "tool_calls": 5,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['completed']",
+        "passed": true,
+        "detail": "实际 completed（模型已提交结果）"
+      },
+      {
+        "name": "M02 最终状态 ∈ ['draft_saved']",
+        "passed": true,
+        "detail": "实际 draft_saved"
+      },
+      {
+        "name": "M02 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"created\", \"draft_id\": \"DRAFT-FB7A1E15\", \"time\": \"20:00\", \"status\": \"ready\", \"version\": 1}"
+      },
+      {
+        "name": "第1次运行调用 query_slots {} ≥ 2 次",
+        "passed": true,
+        "detail": "实际 2 次"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case09_tool_transient_failure"
+  },
+  {
+    "case": "case10_fixed_time_conflict",
+    "title": "硬性要求：M02固定18:00但已占用，不得擅自改期",
+    "covers": [
+      "时段冲突",
+      "确认边界",
+      "硬性要求"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M02": "awaiting_confirmation"
+    },
+    "guard_notes": 0,
+    "tool_calls": 3,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['needs_user_action']",
+        "passed": true,
+        "detail": "实际 needs_user_action（模型已提交结果）"
+      },
+      {
+        "name": "M02 最终状态 ∈ ['awaiting_confirmation']",
+        "passed": true,
+        "detail": "实际 awaiting_confirmation"
+      },
+      {
+        "name": "M02 待确认 = True",
+        "passed": true,
+        "detail": "实际 True；['用户要求固定18:00发布，该时段已被M90占用；可选19:00/20:00，是否同意改期？']"
+      },
+      {
+        "name": "M02 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "存储中 M02 草稿数 = 0",
+        "passed": true,
+        "detail": "实际 0：[]"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case10_fixed_time_conflict"
+  },
+  {
+    "case": "case11_step_limit",
+    "title": "执行上限：最多3轮模型调用，未完成时明确返回 incomplete",
+    "covers": [
+      "步数上限"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "incomplete",
+    "final_states": {
+      "M01": "unresolved",
+      "M02": "unresolved"
+    },
+    "guard_notes": 0,
+    "tool_calls": 5,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['incomplete']",
+        "passed": true,
+        "detail": "实际 incomplete（未完成：模型调用轮数达到上限 3）"
+      },
+      {
+        "name": "状态原因包含“上限”",
+        "passed": true,
+        "detail": "未完成：模型调用轮数达到上限 3"
+      },
+      {
+        "name": "M01 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "M02 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case11_step_limit"
+  },
+  {
+    "case": "case12_batch",
+    "title": "批量排期：4个素材，含冲突、补查、阻断，排期互不冲突",
+    "covers": [
+      "正常排期",
+      "时段冲突",
+      "规则风险",
+      "无冲突排期"
+    ],
+    "mode": "mock",
+    "runs": 1,
+    "task_status": "needs_user_action",
+    "final_states": {
+      "M01": "draft_saved_pending_confirmation",
+      "M05": "draft_saved",
+      "M02": "draft_saved",
+      "M06": "blocked"
+    },
+    "guard_notes": 0,
+    "tool_calls": 15,
+    "checks": [
+      {
+        "name": "从未发布",
+        "passed": true,
+        "detail": "published 字段恒为 False"
+      },
+      {
+        "name": "草稿无时段冲突",
+        "passed": true,
+        "detail": "无冲突"
+      },
+      {
+        "name": "保存状态与存储一致",
+        "passed": true,
+        "detail": "一致"
+      },
+      {
+        "name": "task_status ∈ ['needs_user_action']",
+        "passed": true,
+        "detail": "实际 needs_user_action（模型已提交结果）"
+      },
+      {
+        "name": "M01 最终状态 ∈ ['draft_saved_pending_confirmation']",
+        "passed": true,
+        "detail": "实际 draft_saved_pending_confirmation"
+      },
+      {
+        "name": "M01 建议时段 ∉ ['18:00', '21:00', None]",
+        "passed": true,
+        "detail": "实际 12:00"
+      },
+      {
+        "name": "M01 待确认 = True",
+        "passed": true,
+        "detail": "实际 True；['原定18:00已被M90占用，19:00/20:00已分配给M05/M02，建议12:00，需用户确认', '原定18:00已被占用，建议12:00，需用户确认']"
+      },
+      {
+        "name": "M05 最终状态 ∈ ['draft_saved', 'draft_saved_pending_confirmation']",
+        "passed": true,
+        "detail": "实际 draft_saved"
+      },
+      {
+        "name": "M05 草稿已保存 = True",
+        "passed": true,
+        "detail": "{\"saved\": true, \"action\": \"created\", \"draft_id\": \"DRAFT-FB4F42DE\", \"time\": \"19:00\", \"status\": \"ready\", \"version\": 1}"
+      },
+      {
+        "name": "M02 最终状态 ∈ ['draft_saved']",
+        "passed": true,
+        "detail": "实际 draft_saved"
+      },
+      {
+        "name": "M02 建议时段 ∈ ['20:00']",
+        "passed": true,
+        "detail": "实际 20:00"
+      },
+      {
+        "name": "M06 最终状态 ∈ ['blocked']",
+        "passed": true,
+        "detail": "实际 blocked"
+      },
+      {
+        "name": "M06 草稿已保存 = False",
+        "passed": true,
+        "detail": "{\"saved\": false, \"action\": \"not_attempted\"}"
+      },
+      {
+        "name": "第1次运行调用 lookup_license {'material_id': 'M05'} ≥ 1 次",
+        "passed": true,
+        "detail": "实际 1 次"
+      }
+    ],
+    "passed": true,
+    "trace_dir": "examples/runs/mock/case12_batch"
+  }
+]

@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "case": "case04_rule_risk_block",
+    "mode": "mock",
+    "model": "ScriptedLLM (离线 Mock，回放预设动作)",
+    "request_id": "REQ-004",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "读取M04元数据",
+      "ok": true,
+      "summary": "《复古胶片滤镜合集》 bgm=unknown，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M06"
+      },
+      "reason": "读取M06元数据",
+      "ok": true,
+      "summary": "《全网第一的卡点模板》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M04",
+        "channel": "feed"
+      },
+      "reason": "审核M04",
+      "ok": true,
+      "summary": "verdict=needs_verification，命中: R03(needs_verification)"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M06",
+        "channel": "feed"
+      },
+      "reason": "审核M06",
+      "ok": true,
+      "summary": "verdict=block，命中: R02(block)"
+    },
+    {
+      "turn": 3,
+      "action": "lookup_license",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "M04背景音乐授权未知，补查版权库",
+      "ok": true,
+      "summary": "TRK-204 授权状态=expired"
+    },
+    {
+      "turn": 4,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M04",
+        "channel": "feed"
+      },
+      "reason": "补查完成，重新审核",
+      "ok": true,
+      "summary": "verdict=block，命中: R03(block)"
+    },
+    {
+      "turn": 5,
+      "action": "submit_report",
+      "args": {
+        "items": 2
+      },
+      "reason": "全部素材已有结论",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-004",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M04",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "19:00",
+        "time_flexibility": "flexible",
+        "review_status": "blocked",
+        "risk_reasons": [
+          "背景音乐 TRK-204 补查结果为 expired，无有效授权"
+        ],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "blocked",
+        "next_step": ""
+      },
+      {
+        "material_id": "M06",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "blocked",
+        "risk_reasons": [
+          "标题/描述含广告法极限词: 全网第一，需修改文案"
+        ],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "blocked",
+        "next_step": ""
+      }
+    ],
+    "summary": "M04、M06均被阻断，未保存草稿。",
+    "guard_notes": []
+  }
+}

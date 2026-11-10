@@ -1,0 +1,306 @@
+{
+  "name": "case12_batch",
+  "title": "批量排期：4个素材，含冲突、补查、阻断，排期互不冲突",
+  "covers": [
+    "正常排期",
+    "时段冲突",
+    "规则风险",
+    "无冲突排期"
+  ],
+  "request": {
+    "request_id": "REQ-012",
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "18:00",
+        "time_flexibility": "flexible"
+      },
+      {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "19:00",
+        "time_flexibility": "flexible"
+      },
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "20:00",
+        "time_flexibility": "flexible"
+      },
+      {
+        "material_id": "M06",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "12:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "limits": {
+    "max_steps": 20,
+    "max_tool_calls": 60
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M01",
+          "reason": "读取M01元数据"
+        }
+      },
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M05",
+          "reason": "读取M05元数据"
+        }
+      },
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M02",
+          "reason": "读取M02元数据"
+        }
+      },
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M06",
+          "reason": "读取M06元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M01",
+          "channel": "feed",
+          "reason": "审核M01"
+        }
+      },
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "reason": "审核M05"
+        }
+      },
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "reason": "审核M02"
+        }
+      },
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M06",
+          "channel": "feed",
+          "reason": "审核M06"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M05",
+          "reason": "M05背景音乐授权未知，补查版权库"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "reason": "补查完成，重新审核"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "19:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "先满足要求时段空闲的素材"
+        }
+      },
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "20:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "保存M02 20:00草稿"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "M05/M02已占用19:00/20:00，重新查询为M01找替代时段"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M01",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "12:00",
+          "needs_confirmation": true,
+          "confirmation_items": [
+            "原定18:00已被M90占用，19:00/20:00已分配给M05/M02，建议12:00，需用户确认"
+          ],
+          "note": "",
+          "reason": "剩余空闲10:00/12:00，选更接近18:00的12:00"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M01",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "18:00",
+              "suggested_time": "12:00",
+              "needs_confirmation": true,
+              "pending_confirmations": [
+                "原定18:00已被占用，建议12:00，需用户确认"
+              ],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-CF6562FB"
+            },
+            {
+              "material_id": "M05",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "19:00",
+              "suggested_time": "19:00",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-FB4F42DE"
+            },
+            {
+              "material_id": "M02",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "20:00",
+              "suggested_time": "20:00",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-FB7A1E15"
+            },
+            {
+              "material_id": "M06",
+              "review_status": "blocked",
+              "draft_saved": false,
+              "requested_time": "12:00",
+              "suggested_time": "",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [
+                "标题含极限词“全网第一”"
+              ],
+              "next_step": ""
+            }
+          ],
+          "summary": "3个草稿已保存（M01待确认），M06被阻断。均未发布。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "needs_user_action"
+    ],
+    "items": {
+      "M01": {
+        "final_state_in": [
+          "draft_saved_pending_confirmation"
+        ],
+        "needs_confirmation": true,
+        "time_not_in": [
+          "18:00",
+          "21:00",
+          null
+        ]
+      },
+      "M05": {
+        "final_state_in": [
+          "draft_saved",
+          "draft_saved_pending_confirmation"
+        ],
+        "draft_saved": true
+      },
+      "M02": {
+        "final_state_in": [
+          "draft_saved"
+        ],
+        "time_in": [
+          "20:00"
+        ]
+      },
+      "M06": {
+        "final_state_in": [
+          "blocked"
+        ],
+        "draft_saved": false
+      }
+    },
+    "tool_called": [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M05"
+        }
+      }
+    ]
+  }
+}

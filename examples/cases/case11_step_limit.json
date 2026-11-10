@@ -1,0 +1,105 @@
+{
+  "name": "case11_step_limit",
+  "title": "执行上限：最多3轮模型调用，未完成时明确返回 incomplete",
+  "covers": [
+    "步数上限"
+  ],
+  "request": {
+    "request_id": "REQ-011",
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "18:00",
+        "time_flexibility": "flexible"
+      },
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "20:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "limits": {
+    "max_steps": 3,
+    "max_tool_calls": 40
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M01",
+          "reason": "读取M01元数据"
+        }
+      },
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M02",
+          "reason": "读取M02元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M01",
+          "channel": "feed",
+          "reason": "审核M01"
+        }
+      },
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "reason": "审核M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "20:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "保存M02 20:00草稿"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "incomplete"
+    ],
+    "status_reason_contains": "上限",
+    "items": {
+      "M01": {
+        "draft_saved": false
+      },
+      "M02": {
+        "draft_saved": false
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request_id": "REQ-002",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M01",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "18:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "20:00",
+      "needs_confirmation": true,
+      "pending_confirmations": [
+        "原定 18:00 已被占用（M90），建议改为 20:00，需用户确认"
+      ],
+      "draft": {
+        "saved": true,
+        "action": "updated",
+        "draft_id": "DRAFT-CF6562FB",
+        "time": "20:00",
+        "status": "pending_confirmation",
+        "version": 2
+      },
+      "final_state": "draft_saved_pending_confirmation",
+      "next_step": "请用户确认是否接受 2026-11-12 20:00 发布；确认后草稿方可进入正式排期（当前仅为草稿，未发布）"
+    }
+  ],
+  "summary": "M01 审核通过（无规则命中，BGM 授权为自有）。原定 2026-11-12 18:00 的 feed 时段已被 M90 占用，19:00 亦被占用，因素材为 flexible，已保存同日最接近的空闲时段 20:00 草稿（DRAFT-CF6562FB，待确认，未发布），需用户确认改期。",
+  "guard_notes": []
+}

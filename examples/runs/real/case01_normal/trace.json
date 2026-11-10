@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "case": "case01_normal",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-001",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M02"
+      },
+      "reason": "读取 M02 素材元数据，确认字段完整性与基本信息",
+      "ok": true,
+      "summary": "《冬日vlog模板上新》 bgm=licensed，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed"
+      },
+      "reason": "按 feed 渠道规则审核 M02 是否可排期",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M02"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，确认 20:00 是否可用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "20:00",
+        "needs_confirmation": false,
+        "note": "M02 审核通过，按用户要求 20:00 排期，该时段空闲。"
+      },
+      "reason": "审核通过且 20:00 时段空闲，按用户原定时间保存草稿",
+      "ok": true,
+      "summary": "created DRAFT-FB7A1E15 20:00 status=ready v1"
+    },
+    {
+      "turn": 4,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "M02 已完成审核与排期草稿保存，提交结构化结果",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-001",
+    "task_status": "completed",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "20:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-FB7A1E15",
+          "time": "20:00",
+          "status": "ready",
+          "version": 1
+        },
+        "final_state": "draft_saved",
+        "next_step": "草稿已保存（未发布），等待运营确认后按流程发布"
+      }
+    ],
+    "summary": "M02（冬日vlog模板上新）审核通过，2026-11-12 feed 渠道 20:00 时段空闲，已按用户要求保存排期草稿 DRAFT-FB7A1E15（仅草稿，未发布），无需用户确认。",
+    "guard_notes": []
+  }
+}

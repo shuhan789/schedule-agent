@@ -1,0 +1,30 @@
+{
+  "request_id": "REQ-010",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M02",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "18:00",
+      "time_flexibility": "fixed",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "19:00",
+      "needs_confirmation": true,
+      "pending_confirmations": [
+        "原定 2026-11-12 18:00（feed）已被素材 M90 占用；因该素材时间要求为 fixed，未擅自改期，请确认是否改用同日空闲时段 19:00（备选 20:00 / 12:00 / 10:00）"
+      ],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "awaiting_confirmation",
+      "next_step": "请用户确认替代时段（建议 19:00）后，我再保存排期草稿"
+    }
+  ],
+  "summary": "M02 审核通过（feed 渠道，无规则命中，BGM 已授权）。但用户要求的 2026-11-12 18:00 已被 M90 占用，且该素材为 fixed 时间要求，故未保存草稿；同日空闲时段为 10:00、12:00、19:00、20:00，建议 19:00，等待用户确认。",
+  "guard_notes": []
+}

@@ -1,0 +1,30 @@
+{
+  "request_id": "REQ-008",
+  "task_status": "partial_failed",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M02",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "20:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "20:00",
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": false,
+        "action": "failed",
+        "error_code": "STORAGE_UNAVAILABLE",
+        "error": "草稿存储服务不可用，本次未保存"
+      },
+      "final_state": "save_failed",
+      "next_step": "存储恢复后重新提交"
+    }
+  ],
+  "summary": "M02审核通过，但草稿保存两次均失败（STORAGE_UNAVAILABLE），未保存。",
+  "guard_notes": []
+}

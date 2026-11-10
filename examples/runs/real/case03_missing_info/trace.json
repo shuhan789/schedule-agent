@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "case": "case03_missing_info",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-003",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M03"
+      },
+      "reason": "读取 M03 素材元数据，确认字段完整性与基本信息",
+      "ok": true,
+      "summary": "《新年倒计时模板》 bgm=owned，缺失字段: ['duration_sec', 'cover_url']"
+    },
+    {
+      "turn": 1,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M03",
+        "channel": "feed"
+      },
+      "reason": "按 feed 渠道审核规则检查 M03 是否可排期",
+      "ok": true,
+      "summary": "verdict=needs_info，命中: R01(needs_info)"
+    },
+    {
+      "turn": 2,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M03"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，为补齐信息后的排期提供参考",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "M03 审核为 needs_info 且未保存草稿，需向用户报告缺失字段与可用时段",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-003",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M03",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "12:00",
+        "time_flexibility": "flexible",
+        "review_status": "needs_info",
+        "risk_reasons": [
+          "缺少必填字段: duration_sec, cover_url，需运营补充"
+        ],
+        "suggested_time": "12:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "needs_info",
+        "next_step": "请运营（owner：运营-小林）补充视频时长 duration_sec 和封面图 cover_url 后重新提交审核；2026-11-12 feed 渠道 12:00 时段当前空闲，补齐信息通过审核后即可按原定时间排期"
+      }
+    ],
+    "summary": "M03（新年倒计时模板）审核结论为 needs_info：缺少 duration_sec 与 cover_url 两个必填字段，按规则未保存排期草稿。已确认 2026-11-12 feed 渠道 12:00 时段空闲，待运营补齐字段并通过审核后即可按原定时间排期。",
+    "guard_notes": []
+  }
+}

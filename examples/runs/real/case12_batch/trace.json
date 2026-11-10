@@ -1,0 +1,284 @@
+{
+  "meta": {
+    "case": "case12_batch",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-012",
+    "run_index": 1,
+    "max_steps": 20,
+    "max_tool_calls": 60
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "读取 M01 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《小影AI一键成片教程》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "读取 M05 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《毕业季剪辑技巧》 bgm=unknown，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M02"
+      },
+      "reason": "读取 M02 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《冬日vlog模板上新》 bgm=licensed，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M06"
+      },
+      "reason": "读取 M06 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《全网第一的卡点模板》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed"
+      },
+      "reason": "M01 元数据完整，按 feed 渠道规则审核",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M05",
+        "channel": "feed"
+      },
+      "reason": "M05 背景音乐授权未知，先按 feed 规则审核看结论",
+      "ok": true,
+      "summary": "verdict=needs_verification，命中: R03(needs_verification)"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed"
+      },
+      "reason": "M02 元数据完整，按 feed 渠道规则审核",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M06",
+        "channel": "feed"
+      },
+      "reason": "M06 元数据完整，按 feed 渠道规则审核",
+      "ok": true,
+      "summary": "verdict=block，命中: R02(block)"
+    },
+    {
+      "turn": 3,
+      "action": "lookup_license",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "check_rules 返回 needs_verification，需到版权库补查 TRK-305 授权状态",
+      "ok": true,
+      "summary": "TRK-305 授权状态=valid"
+    },
+    {
+      "turn": 3,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12"
+      },
+      "reason": "查询 feed 渠道 2026-11-12 各时段占用，为可排期素材选时段",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 4,
+      "action": "check_rules",
+      "args": {
+        "channel": "feed",
+        "material_id": "M05"
+      },
+      "reason": "已补查 TRK-305 授权有效，重新审核 M05 获取最终结论",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 5,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "19:00",
+        "needs_confirmation": false
+      },
+      "reason": "M05 审核通过，用户要求的 19:00 空闲，按原时间保存草稿",
+      "ok": true,
+      "summary": "created DRAFT-FB4F42DE 19:00 status=ready v1"
+    },
+    {
+      "turn": 5,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "20:00",
+        "needs_confirmation": false
+      },
+      "reason": "M02 审核通过，用户要求的 20:00 空闲，按原时间保存草稿",
+      "ok": true,
+      "summary": "created DRAFT-FB7A1E15 20:00 status=ready v1"
+    },
+    {
+      "turn": 6,
+      "action": "save_draft",
+      "args": {
+        "channel": "feed",
+        "confirmation_items": [
+          "原定 18:00 已被占用（M90），建议改为 12:00，需用户确认",
+          "19:00 已分配给 M05、20:00 已分配给 M02，故未选更接近的时段"
+        ],
+        "date": "2026-11-12",
+        "material_id": "M01",
+        "needs_confirmation": true,
+        "time": "12:00"
+      },
+      "reason": "M01 审核通过但原定 18:00 被占用，flexible 下选同日最接近的空闲时段 12:00 并标记需确认",
+      "ok": true,
+      "summary": "created DRAFT-CF6562FB 12:00 status=pending_confirmation v1"
+    },
+    {
+      "turn": 7,
+      "action": "submit_report",
+      "args": {
+        "items": 4
+      },
+      "reason": "四个素材均已有明确结论，草稿保存结果已确认，提交结构化报告结束任务",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-012",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "18:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "12:00",
+        "needs_confirmation": true,
+        "pending_confirmations": [
+          "原定 18:00 已被占用（M90），建议改为 12:00，需用户确认",
+          "19:00 已分配给 M05、20:00 已分配给 M02，故未选更接近的时段"
+        ],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-CF6562FB",
+          "time": "12:00",
+          "status": "pending_confirmation",
+          "version": 1
+        },
+        "final_state": "draft_saved_pending_confirmation",
+        "next_step": "请用户确认是否接受 12:00 发布；确认后草稿可转正式排期"
+      },
+      {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "19:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "19:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-FB4F42DE",
+          "time": "19:00",
+          "status": "ready",
+          "version": 1
+        },
+        "final_state": "draft_saved",
+        "next_step": "无需操作，草稿已就绪（未发布）"
+      },
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "20:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-FB7A1E15",
+          "time": "20:00",
+          "status": "ready",
+          "version": 1
+        },
+        "final_state": "draft_saved",
+        "next_step": "无需操作，草稿已就绪（未发布）"
+      },
+      {
+        "material_id": "M06",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "12:00",
+        "time_flexibility": "flexible",
+        "review_status": "blocked",
+        "risk_reasons": [
+          "标题/描述含广告法极限词: 全网第一，需修改文案"
+        ],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "blocked",
+        "next_step": "请运营修改标题/描述去除极限词后重新提交审核，本次不排期"
+      }
+    ],
+    "summary": "共处理 4 个素材：M05、M02 审核通过并按原要求时段（19:00、20:00）保存草稿；M01 审核通过但原定 18:00 已被 M90 占用，已按 flexible 规则改选同日最接近的空闲时段 12:00 保存草稿并标记需用户确认；M06 因标题含极限词“全网第一”被阻断，未保存草稿，需修改文案后重审。所有草稿均未发布。",
+    "guard_notes": []
+  }
+}

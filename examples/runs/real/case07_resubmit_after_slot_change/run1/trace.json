@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "case": "case07_resubmit_after_slot_change",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-002",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "读取 M01 素材元数据以确认字段完整性和基本信息",
+      "ok": true,
+      "summary": "《小影AI一键成片教程》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed"
+      },
+      "reason": "按 feed 渠道审核规则检查 M01 是否可排期",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M01"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，确认 18:00 是否可用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "19:00",
+        "needs_confirmation": true,
+        "confirmation_items": [
+          "原定 18:00 已被占用（M90），建议改为 19:00，需用户确认"
+        ],
+        "note": "M01 审核通过；18:00 被 M90 占用，按 flexible 规则改选同日最接近空闲时段 19:00，待用户确认。"
+      },
+      "reason": "18:00 被占用且素材为 flexible，保存 19:00 草稿并标记需确认",
+      "ok": true,
+      "summary": "created DRAFT-CF6562FB 19:00 status=pending_confirmation v1"
+    },
+    {
+      "turn": 4,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "M01 已完成审核与草稿保存，提交最终结果并说明待确认事项",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-002",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "18:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "19:00",
+        "needs_confirmation": true,
+        "pending_confirmations": [
+          "原定 18:00 已被占用（M90），建议改为 19:00，需用户确认"
+        ],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-CF6562FB",
+          "time": "19:00",
+          "status": "pending_confirmation",
+          "version": 1
+        },
+        "final_state": "draft_saved_pending_confirmation",
+        "next_step": "请用户确认是否接受 2026-11-12 19:00（feed 渠道）的替代时段；确认后草稿方可进入发布流程"
+      }
+    ],
+    "summary": "M01 审核通过（无规则命中，BGM 授权为自有）。原定 2026-11-12 18:00 的 feed 时段已被 M90 占用，因素材为 flexible，已保存同日最接近的空闲时段 19:00 草稿（DRAFT-CF6562FB，状态 pending_confirmation，未发布），需用户确认。同日其他空闲时段：10:00、12:00、20:00。",
+    "guard_notes": []
+  }
+}

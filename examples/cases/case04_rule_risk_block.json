@@ -1,0 +1,163 @@
+{
+  "name": "case04_rule_risk_block",
+  "title": "规则风险：M04补查后授权过期→阻断；M06含极限词→阻断",
+  "covers": [
+    "规则风险",
+    "补查",
+    "阻断"
+  ],
+  "request": {
+    "request_id": "REQ-004",
+    "items": [
+      {
+        "material_id": "M04",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "19:00",
+        "time_flexibility": "flexible"
+      },
+      {
+        "material_id": "M06",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "20:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M04",
+          "reason": "读取M04元数据"
+        }
+      },
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M06",
+          "reason": "读取M06元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M04",
+          "channel": "feed",
+          "reason": "审核M04"
+        }
+      },
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M06",
+          "channel": "feed",
+          "reason": "审核M06"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M04",
+          "reason": "M04背景音乐授权未知，补查版权库"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M04",
+          "channel": "feed",
+          "reason": "补查完成，重新审核"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M04",
+              "review_status": "blocked",
+              "draft_saved": false,
+              "requested_time": "19:00",
+              "suggested_time": "",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [
+                "背景音乐授权已过期"
+              ],
+              "next_step": ""
+            },
+            {
+              "material_id": "M06",
+              "review_status": "blocked",
+              "draft_saved": false,
+              "requested_time": "20:00",
+              "suggested_time": "",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [
+                "标题含极限词“全网第一”"
+              ],
+              "next_step": ""
+            }
+          ],
+          "summary": "M04、M06均被阻断，未保存草稿。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "needs_user_action"
+    ],
+    "items": {
+      "M04": {
+        "final_state_in": [
+          "blocked"
+        ],
+        "review_status": "blocked",
+        "draft_saved": false,
+        "risk_mentions": [
+          "expired"
+        ]
+      },
+      "M06": {
+        "final_state_in": [
+          "blocked"
+        ],
+        "review_status": "blocked",
+        "draft_saved": false,
+        "risk_mentions": [
+          "全网第一"
+        ]
+      }
+    },
+    "store": {
+      "M04": {
+        "count": 0
+      },
+      "M06": {
+        "count": 0
+      }
+    },
+    "tool_called": [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M04"
+        }
+      }
+    ]
+  }
+}

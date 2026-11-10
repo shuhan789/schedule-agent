@@ -1,0 +1,16 @@
+{
+  "_note": "合成审核规则。severity: needs_info=信息缺失需补充; needs_verification=需补查; block=阻断，不得排期。",
+  "required_fields": ["title", "duration_sec", "cover_url", "owner", "bgm_license"],
+  "banned_words": ["全网第一", "最好用", "100%", "第一品牌", "史上最"],
+  "channel_max_duration_sec": {"feed": 180},
+  "rules": [
+    {"rule_id": "R01", "name": "必填字段完整", "severity": "needs_info",
+     "description": "required_fields 中任一字段为空，需运营补充后再审核。"},
+    {"rule_id": "R02", "name": "广告法极限词", "severity": "block",
+     "description": "标题或描述包含 banned_words 中的词，阻断排期，需修改文案。"},
+    {"rule_id": "R03", "name": "背景音乐授权", "severity": "needs_verification / block",
+     "description": "bgm_license=unknown 时需调用 lookup_license 补查版权库；补查结果 expired 或 not_found 则阻断。owned/licensed 直接通过。"},
+    {"rule_id": "R04", "name": "渠道时长上限", "severity": "block",
+     "description": "duration_sec 超过 channel_max_duration_sec 对应渠道上限则阻断。"}
+  ]
+}

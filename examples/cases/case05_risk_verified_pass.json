@@ -1,0 +1,139 @@
+{
+  "name": "case05_risk_verified_pass",
+  "title": "规则风险补查后通过：M05授权有效→正常排期",
+  "covers": [
+    "规则风险",
+    "补查",
+    "正常排期"
+  ],
+  "request": {
+    "request_id": "REQ-005",
+    "items": [
+      {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "19:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M05",
+          "reason": "读取M05元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "reason": "审核M05"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M05",
+          "reason": "M05背景音乐授权未知，补查版权库"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "reason": "补查完成，重新审核"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用",
+          "material_id": "M05"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M05",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "19:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "保存M05 19:00草稿"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M05",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "19:00",
+              "suggested_time": "19:00",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-FB4F42DE"
+            }
+          ],
+          "summary": "M05补查授权有效，已保存19:00草稿（未发布）。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "completed"
+    ],
+    "items": {
+      "M05": {
+        "final_state_in": [
+          "draft_saved"
+        ],
+        "time_in": [
+          "19:00"
+        ],
+        "draft_saved": true
+      }
+    },
+    "store": {
+      "M05": {
+        "count": 1
+      }
+    },
+    "tool_called": [
+      {
+        "tool": "lookup_license",
+        "args": {
+          "material_id": "M05"
+        }
+      }
+    ]
+  }
+}

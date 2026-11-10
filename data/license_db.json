@@ -1,0 +1,11 @@
+{
+  "_note": "合成版权库，供 lookup_license 补查。",
+  "tracks": {
+    "TRK-101": {"status": "valid", "valid_until": "2027-12-31"},
+    "TRK-102": {"status": "valid", "valid_until": "2027-03-31"},
+    "TRK-103": {"status": "valid", "valid_until": "2027-12-31"},
+    "TRK-106": {"status": "valid", "valid_until": "2027-12-31"},
+    "TRK-204": {"status": "expired", "valid_until": "2026-10-31"},
+    "TRK-305": {"status": "valid", "valid_until": "2027-06-30"}
+  }
+}

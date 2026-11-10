@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "case": "case08_save_failure",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-008",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M02"
+      },
+      "reason": "读取 M02 元数据以确认字段完整性和素材内容",
+      "ok": true,
+      "summary": "《冬日vlog模板上新》 bgm=licensed，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed"
+      },
+      "reason": "按 feed 渠道规则审核 M02 是否可排期",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M02"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，确认 20:00 是否可用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "20:00",
+        "needs_confirmation": false,
+        "note": "M02 审核通过，按用户要求 20:00 排期 feed 渠道，时段空闲无冲突。"
+      },
+      "reason": "审核通过且 20:00 空闲，按用户原定时间保存草稿",
+      "ok": false,
+      "summary": "失败 STORAGE_UNAVAILABLE: 草稿存储服务不可用，本次未保存（可重试）"
+    },
+    {
+      "turn": 4,
+      "action": "save_draft",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M02",
+        "needs_confirmation": false,
+        "note": "M02 审核通过，按用户要求 20:00 排期 feed 渠道，时段空闲无冲突（重试保存）。",
+        "time": "20:00"
+      },
+      "reason": "上次保存因存储不可用失败，按规则重试一次",
+      "ok": false,
+      "summary": "失败 STORAGE_UNAVAILABLE: 草稿存储服务不可用，本次未保存（可重试）"
+    },
+    {
+      "turn": 5,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "M02 已有审核结论与可用时段，但草稿保存两次失败，需如实上报未完成状态",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-008",
+    "task_status": "partial_failed",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "20:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "failed",
+          "error_code": "STORAGE_UNAVAILABLE",
+          "error": "草稿存储服务不可用，本次未保存"
+        },
+        "final_state": "save_failed",
+        "next_step": "审核已通过，2026-11-12 feed 渠道 20:00 时段空闲可用；但草稿存储服务连续两次返回 STORAGE_UNAVAILABLE，草稿未保存。请运营在存储恢复后重新提交保存，或手动创建该排期草稿。"
+      }
+    ],
+    "summary": "M02 审核通过（feed 渠道，无规则命中），2026-11-12 20:00 时段空闲、与用户要求一致，无需改期。但 save_draft 连续两次返回 STORAGE_UNAVAILABLE（可重试错误），草稿未能保存，需存储恢复后重试。未发布任何内容。",
+    "guard_notes": []
+  }
+}

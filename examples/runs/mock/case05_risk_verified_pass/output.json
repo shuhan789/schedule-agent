@@ -1,0 +1,32 @@
+{
+  "request_id": "REQ-005",
+  "task_status": "completed",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M05",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "19:00",
+      "time_flexibility": "flexible",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "19:00",
+      "needs_confirmation": false,
+      "pending_confirmations": [],
+      "draft": {
+        "saved": true,
+        "action": "created",
+        "draft_id": "DRAFT-FB4F42DE",
+        "time": "19:00",
+        "status": "ready",
+        "version": 1
+      },
+      "final_state": "draft_saved",
+      "next_step": ""
+    }
+  ],
+  "summary": "M05补查授权有效，已保存19:00草稿（未发布）。",
+  "guard_notes": []
+}

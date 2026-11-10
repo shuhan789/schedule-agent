@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "case": "case04_rule_risk_block",
+    "mode": "real",
+    "model": "deepseek-chat @ https://api.deepseek.com",
+    "request_id": "REQ-004",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "读取 M04 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《复古胶片滤镜合集》 bgm=unknown，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M06"
+      },
+      "reason": "读取 M06 元数据以确认字段完整性和审核所需信息",
+      "ok": true,
+      "summary": "《全网第一的卡点模板》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M04",
+        "channel": "feed"
+      },
+      "reason": "M04 背景音乐授权未知，先按 feed 渠道规则审核",
+      "ok": true,
+      "summary": "verdict=needs_verification，命中: R03(needs_verification)"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M06",
+        "channel": "feed"
+      },
+      "reason": "M06 按 feed 渠道规则审核",
+      "ok": true,
+      "summary": "verdict=block，命中: R02(block)"
+    },
+    {
+      "turn": 3,
+      "action": "lookup_license",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "check_rules 要求补查 M04 背景音乐 TRK-204 的授权状态",
+      "ok": true,
+      "summary": "TRK-204 授权状态=expired"
+    },
+    {
+      "turn": 3,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M04"
+      },
+      "reason": "查询 2026-11-12 feed 渠道时段占用，为 M04 找可用时段",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 4,
+      "action": "check_rules",
+      "args": {
+        "channel": "feed",
+        "material_id": "M04"
+      },
+      "reason": "补查得知 TRK-204 授权已过期，重新审核获取最终结论",
+      "ok": true,
+      "summary": "verdict=block，命中: R03(block)"
+    },
+    {
+      "turn": 5,
+      "action": "submit_report",
+      "args": {
+        "items": 2
+      },
+      "reason": "两个素材审核结论均为 block，按规则不保存草稿，提交结构化结果说明风险与后续动作",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-004",
+    "task_status": "needs_user_action",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M04",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "19:00",
+        "time_flexibility": "flexible",
+        "review_status": "blocked",
+        "risk_reasons": [
+          "背景音乐 TRK-204 补查结果为 expired，无有效授权"
+        ],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "blocked",
+        "next_step": "请更换为已授权背景音乐或续期 TRK-204 授权后重新提交审核；审核通过后再排期（2026-11-12 feed 渠道 19:00 当前空闲）"
+      },
+      {
+        "material_id": "M06",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "blocked",
+        "risk_reasons": [
+          "标题/描述含广告法极限词: 全网第一，需修改文案"
+        ],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "blocked",
+        "next_step": "请修改标题（去掉“全网第一”等极限词）后重新提交审核；审核通过后再排期（2026-11-12 feed 渠道 20:00 当前空闲）"
+      }
+    ],
+    "summary": "REQ-004 两个素材均未通过审核，未保存任何排期草稿。M04 因背景音乐 TRK-204 授权已过期被阻断；M06 因标题含极限词“全网第一”被阻断。两者均需修改后重新提交审核。2026-11-12 feed 渠道 19:00 与 20:00 目前空闲，可在素材整改通过后使用。",
+    "guard_notes": []
+  }
+}

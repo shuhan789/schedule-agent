@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "case": "case05_risk_verified_pass",
+    "mode": "mock",
+    "model": "ScriptedLLM (离线 Mock，回放预设动作)",
+    "request_id": "REQ-005",
+    "run_index": 1,
+    "max_steps": 15,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "读取M05元数据",
+      "ok": true,
+      "summary": "《毕业季剪辑技巧》 bgm=unknown，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M05",
+        "channel": "feed"
+      },
+      "reason": "审核M05",
+      "ok": true,
+      "summary": "verdict=needs_verification，命中: R03(needs_verification)"
+    },
+    {
+      "turn": 3,
+      "action": "lookup_license",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "M05背景音乐授权未知，补查版权库",
+      "ok": true,
+      "summary": "TRK-305 授权状态=valid"
+    },
+    {
+      "turn": 4,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M05",
+        "channel": "feed"
+      },
+      "reason": "补查完成，重新审核",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 5,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12",
+        "material_id": "M05"
+      },
+      "reason": "查询当天时段占用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 6,
+      "action": "save_draft",
+      "args": {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "time": "19:00",
+        "needs_confirmation": false,
+        "confirmation_items": [],
+        "note": ""
+      },
+      "reason": "保存M05 19:00草稿",
+      "ok": true,
+      "summary": "created DRAFT-FB4F42DE 19:00 status=ready v1"
+    },
+    {
+      "turn": 7,
+      "action": "submit_report",
+      "args": {
+        "items": 1
+      },
+      "reason": "全部素材已有结论",
+      "ok": true,
+      "summary": "提交最终结果"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-005",
+    "task_status": "completed",
+    "status_reason": "模型已提交结果",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M05",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "19:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": "19:00",
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": true,
+          "action": "created",
+          "draft_id": "DRAFT-FB4F42DE",
+          "time": "19:00",
+          "status": "ready",
+          "version": 1
+        },
+        "final_state": "draft_saved",
+        "next_step": ""
+      }
+    ],
+    "summary": "M05补查授权有效，已保存19:00草稿（未发布）。",
+    "guard_notes": []
+  }
+}

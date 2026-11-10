@@ -1,0 +1,30 @@
+{
+  "request_id": "REQ-010",
+  "task_status": "needs_user_action",
+  "status_reason": "模型已提交结果",
+  "published": false,
+  "items": [
+    {
+      "material_id": "M02",
+      "channel": "feed",
+      "date": "2026-11-12",
+      "requested_time": "18:00",
+      "time_flexibility": "fixed",
+      "review_status": "approved",
+      "risk_reasons": [],
+      "suggested_time": "19:00",
+      "needs_confirmation": true,
+      "pending_confirmations": [
+        "用户要求固定18:00发布，该时段已被M90占用；可选19:00/20:00，是否同意改期？"
+      ],
+      "draft": {
+        "saved": false,
+        "action": "not_attempted"
+      },
+      "final_state": "awaiting_confirmation",
+      "next_step": "等待用户确认改期"
+    }
+  ],
+  "summary": "M02固定时段冲突，未保存草稿，等待用户决定。",
+  "guard_notes": []
+}

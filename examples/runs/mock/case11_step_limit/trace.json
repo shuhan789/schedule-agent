@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "case": "case11_step_limit",
+    "mode": "mock",
+    "model": "ScriptedLLM (离线 Mock，回放预设动作)",
+    "request_id": "REQ-011",
+    "run_index": 1,
+    "max_steps": 3,
+    "max_tool_calls": 40
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "读取M01元数据",
+      "ok": true,
+      "summary": "《小影AI一键成片教程》 bgm=owned，字段完整"
+    },
+    {
+      "turn": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M02"
+      },
+      "reason": "读取M02元数据",
+      "ok": true,
+      "summary": "《冬日vlog模板上新》 bgm=licensed，字段完整"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M01",
+        "channel": "feed"
+      },
+      "reason": "审核M01",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M02",
+        "channel": "feed"
+      },
+      "reason": "审核M02",
+      "ok": true,
+      "summary": "verdict=pass"
+    },
+    {
+      "turn": 3,
+      "action": "query_slots",
+      "args": {
+        "channel": "feed",
+        "date": "2026-11-12"
+      },
+      "reason": "查询当天时段占用",
+      "ok": true,
+      "summary": "空闲: ['10:00', '12:00', '19:00', '20:00']；占用: ['18:00(occupied:M90)', '21:00(occupied:M91)']"
+    },
+    {
+      "turn": 3,
+      "action": "limit_reached",
+      "args": {},
+      "reason": "",
+      "summary": "模型调用轮数达到上限 3"
+    }
+  ],
+  "final": {
+    "request_id": "REQ-011",
+    "task_status": "incomplete",
+    "status_reason": "未完成：模型调用轮数达到上限 3",
+    "published": false,
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "18:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "unresolved",
+        "next_step": ""
+      },
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "requested_time": "20:00",
+        "time_flexibility": "flexible",
+        "review_status": "approved",
+        "risk_reasons": [],
+        "suggested_time": null,
+        "needs_confirmation": false,
+        "pending_confirmations": [],
+        "draft": {
+          "saved": false,
+          "action": "not_attempted"
+        },
+        "final_state": "unresolved",
+        "next_step": ""
+      }
+    ],
+    "summary": "",
+    "guard_notes": []
+  }
+}

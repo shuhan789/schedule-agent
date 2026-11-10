@@ -1,0 +1,122 @@
+{
+  "name": "case02_slot_conflict",
+  "title": "参考实例：M01要求18:00但已占用，建议19:00并待确认",
+  "covers": [
+    "时段冲突",
+    "确认边界"
+  ],
+  "request": {
+    "request_id": "REQ-002",
+    "items": [
+      {
+        "material_id": "M01",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "18:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M01",
+          "reason": "读取M01元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M01",
+          "channel": "feed",
+          "reason": "审核M01"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用",
+          "material_id": "M01"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M01",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "19:00",
+          "needs_confirmation": true,
+          "confirmation_items": [
+            "原定18:00已被M90占用，建议改为19:00，需用户确认"
+          ],
+          "note": "",
+          "reason": "18:00被占用，选最近空闲19:00并标待确认"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M01",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "18:00",
+              "suggested_time": "19:00",
+              "needs_confirmation": true,
+              "pending_confirmations": [
+                "原定18:00已被M90占用，建议改为19:00，需用户确认"
+              ],
+              "risk_reasons": [],
+              "next_step": "请确认是否改为19:00",
+              "draft_id": "DRAFT-CF6562FB"
+            }
+          ],
+          "summary": "M01审核通过；18:00已被占用，草稿建议19:00，待用户确认（仅草稿，未发布）。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "needs_user_action"
+    ],
+    "items": {
+      "M01": {
+        "final_state_in": [
+          "draft_saved_pending_confirmation"
+        ],
+        "review_status": "approved",
+        "time_not_in": [
+          "18:00",
+          "21:00",
+          null
+        ],
+        "needs_confirmation": true,
+        "draft_saved": true
+      }
+    },
+    "store": {
+      "M01": {
+        "count": 1,
+        "time_not_in": [
+          "18:00"
+        ]
+      }
+    }
+  }
+}

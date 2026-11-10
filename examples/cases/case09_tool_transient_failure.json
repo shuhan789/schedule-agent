@@ -1,0 +1,126 @@
+{
+  "name": "case09_tool_transient_failure",
+  "title": "工具失败后恢复：时段查询首次超时，重试成功",
+  "covers": [
+    "工具失败",
+    "正常排期"
+  ],
+  "request": {
+    "request_id": "REQ-009",
+    "items": [
+      {
+        "material_id": "M02",
+        "channel": "feed",
+        "date": "2026-11-12",
+        "preferred_time": "20:00",
+        "time_flexibility": "flexible"
+      }
+    ]
+  },
+  "faults": {
+    "query_slots": {
+      "mode": "first_n",
+      "n": 1
+    }
+  },
+  "mock_script": [
+    [
+      {
+        "tool": "read_material",
+        "args": {
+          "material_id": "M02",
+          "reason": "读取M02元数据"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "check_rules",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "reason": "审核M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "查询当天时段占用",
+          "material_id": "M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "query_slots",
+        "args": {
+          "channel": "feed",
+          "date": "2026-11-12",
+          "reason": "上次超时且可重试，重试",
+          "material_id": "M02"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "save_draft",
+        "args": {
+          "material_id": "M02",
+          "channel": "feed",
+          "date": "2026-11-12",
+          "time": "20:00",
+          "needs_confirmation": false,
+          "confirmation_items": [],
+          "note": "",
+          "reason": "保存M02 20:00草稿"
+        }
+      }
+    ],
+    [
+      {
+        "tool": "submit_report",
+        "args": {
+          "items": [
+            {
+              "material_id": "M02",
+              "review_status": "approved",
+              "draft_saved": true,
+              "requested_time": "20:00",
+              "suggested_time": "20:00",
+              "needs_confirmation": false,
+              "pending_confirmations": [],
+              "risk_reasons": [],
+              "next_step": "",
+              "draft_id": "DRAFT-FB7A1E15"
+            }
+          ],
+          "summary": "M02已保存20:00草稿（未发布）。",
+          "reason": "全部素材已有结论"
+        }
+      }
+    ]
+  ],
+  "expect": {
+    "task_status_in": [
+      "completed"
+    ],
+    "items": {
+      "M02": {
+        "final_state_in": [
+          "draft_saved"
+        ],
+        "draft_saved": true
+      }
+    },
+    "tool_called": [
+      {
+        "tool": "query_slots",
+        "min": 2
+      }
+    ]
+  }
+}
